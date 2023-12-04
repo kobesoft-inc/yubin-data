@@ -7,14 +7,14 @@ use Illuminate\Support\Facades\DB;
 use Kobesoft\YubinData\Models\JpZipCode;
 use Kobesoft\YubinData\Services\JpZipCode\Import;
 
-class ImportJpZipCodes extends Command
+class ImportYubinData extends Command
 {
     /**
      * コンソールコマンドの名前と署名
      *
      * @var string
      */
-    protected $signature = 'green:import:jp-zip-codes';
+    protected $signature = 'import:yubin-data';
 
     /**
      * コンソールコマンドの説明

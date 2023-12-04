@@ -2,6 +2,7 @@
 
 namespace Kobesoft\YubinData\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -13,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $town 町域
  * @property string $office_address 事業所の住所
  * @property string $office_name 事業所の名称
+ * @method static Builder whereZipCode(string $zipCode)
  */
 class JpZipCode extends Model
 {
