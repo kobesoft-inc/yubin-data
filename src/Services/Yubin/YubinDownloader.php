@@ -148,10 +148,9 @@ class YubinDownloader
         YubinDownloader::downloadJigyosyo(function (YubinRecord $record) use ($zipCodes) {
             $zipCodes->push($record);
         });
-        $inserts = [];
-        $zipCodes->groupBy('zipCode')->each(function ($records) use (&$inserts) {
-            $inserts[] = YubinRecord::unify($records->toArray())->toArray();
-        });
-        return $inserts;
+        return $zipCodes
+            ->groupBy('zipCode')
+            ->map(fn($records) => YubinRecord::unify($records->toArray())->toArray())
+            ->toArray();
     }
 }
