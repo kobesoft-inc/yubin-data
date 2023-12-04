@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Kobesoft\YubinData\Models\JpZipCode;
 use Kobesoft\YubinData\Services\Yubin\YubinDownloader;
+use Kobesoft\YubinData\Services\Yubin\YubinRecord;
 
 class ImportYubinData extends Command
 {
@@ -51,5 +52,7 @@ class ImportYubinData extends Command
 
         // 完了のメッセージを表示する
         $this->info('日本の郵便番号データベースのインポートが完了しました。');
+
+        dd(YubinRecord::$unifiedData);
     }
 }
