@@ -23,7 +23,7 @@ class YubinRecord
      * @param array $row CSVの行
      * @return YubinRecord 郵便番号レコード
      */
-    public static function makeTown(array $row): YubinRecord
+    public static function makeFromKen(array $row): YubinRecord
     {
         return new YubinRecord(
             zipCode: $row[2],
@@ -38,7 +38,7 @@ class YubinRecord
      * @param array $row CSVの行
      * @return YubinRecord 郵便番号レコード
      */
-    public static function makeOffice(array $row): YubinRecord
+    public static function makeFromJigyosyo(array $row): YubinRecord
     {
         return new YubinRecord(
             zipCode: $row[7],

@@ -96,7 +96,7 @@ class YubinDownloader
         // CSVファイルを処理する
         $fp = fopen($csvFilename, 'r');
         while ($row = fgetcsv($fp)) {
-            $closure(YubinRecord::makeTown($row));
+            $closure(YubinRecord::makeFromKen($row));
         }
         fclose($fp);
 
@@ -124,7 +124,7 @@ class YubinDownloader
         // CSVファイルを処理する
         $fp = fopen($csvFilename, 'r');
         while ($row = fgetcsv($fp)) {
-            $closure(YubinRecord::makeOffice($row));
+            $closure(YubinRecord::makeFromJigyosyo($row));
         }
         fclose($fp);
 
