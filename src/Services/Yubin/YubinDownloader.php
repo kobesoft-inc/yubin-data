@@ -150,7 +150,7 @@ class YubinDownloader
         });
         return $zipCodes
             ->groupBy('zipCode')
-            ->map(fn($records) => YubinRecord::unify($records->toArray())->toArray())
+            ->map(fn($records) => YubinRecord::unifyRecords($records->toArray())->toArray())
             ->toArray();
     }
 }
