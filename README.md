@@ -7,7 +7,8 @@
 ## 2. インストール
 
 ```bash
-composer require kobesoft/yubin-data
+composer config repositories.kobesoft/yubin-data vcs https://github.com/kobesoft-inc/yubin-data.git
+composer require kobesoft/yubin-data:dev-main
 ```
 
 ## 3. 使い方

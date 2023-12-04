@@ -1,17 +1,17 @@
 <?php
 
-namespace Kobesoft\YubinData\Services\JpZipCode;
+namespace Kobesoft\YubinData\Services\Yubin;
 
 use Closure;
 use Exception;
 use ZipArchive;
 
-class Import
+class YubinDownloader
 {
-    const TOWN_URL = 'https://www.post.japanpost.jp/zipcode/dl/utf/zip/utf_ken_all.zip';
-    const TOWN_FILE = 'utf_all.csv';
-    const OFFICE_URL = 'https://www.post.japanpost.jp/zipcode/dl/jigyosyo/zip/jigyosyo.zip';
-    const OFFICE_FILE = 'JIGYOSYO.CSV';
+    const KEN_URL = 'https://www.post.japanpost.jp/zipcode/dl/utf/zip/utf_ken_all.zip';
+    const KEN_FILE = 'utf_all.csv';
+    const JIGYOSYO_URL = 'https://www.post.japanpost.jp/zipcode/dl/jigyosyo/zip/jigyosyo.zip';
+    const JIGYOSYO_FILE = 'JIGYOSYO.CSV';
 
     /**
      * 一時ファイルのディレクトリのパスを返す
@@ -38,7 +38,7 @@ class Import
      * @return string ダウンロードしたファイルのパス
      * @throws Exception
      */
-    protected static function download(string $url): string
+    protected static function downloadFromUrl(string $url): string
     {
         $path = self::temporaryPath(basename($url));
         $fp = fopen($path, 'w+');
@@ -81,22 +81,22 @@ class Import
     }
 
     /**
-     * 郵便番号データをインポートする
+     * 全国の郵便番号データをインポートする
      *
      * @param Closure $closure
      * @return void
      * @throws Exception
      */
-    protected static function importTown(Closure $closure)
+    protected static function downloadKen(Closure $closure)
     {
         // ファイルをダウンロードして解凍する
-        $zipFilename = self::download(self::TOWN_URL);
-        $csvFilename = self::extract($zipFilename, self::TOWN_FILE);
+        $zipFilename = self::downloadFromUrl(self::KEN_URL);
+        $csvFilename = self::extract($zipFilename, self::KEN_FILE);
 
         // CSVファイルを処理する
         $fp = fopen($csvFilename, 'r');
         while ($row = fgetcsv($fp)) {
-            $closure(ZipCodeRecord::makeTown($row));
+            $closure(YubinRecord::makeTown($row));
         }
         fclose($fp);
 
@@ -106,17 +106,17 @@ class Import
     }
 
     /**
-     * 郵便番号データをインポートする
+     * 事業所の郵便番号データをインポートする
      *
      * @param Closure $closure
      * @return void
      * @throws Exception
      */
-    protected static function importOffice(Closure $closure)
+    protected static function downloadJigyosyo(Closure $closure)
     {
         // ファイルをダウンロードして解凍する
-        $zipFilename = self::download(self::OFFICE_URL);
-        $csvFilename = self::extract($zipFilename, self::OFFICE_FILE);
+        $zipFilename = self::downloadFromUrl(self::JIGYOSYO_URL);
+        $csvFilename = self::extract($zipFilename, self::JIGYOSYO_FILE);
 
         // 文字コードを変換する
         self::convertEncodingToUtf8($csvFilename, 'SJIS-win');
@@ -124,7 +124,7 @@ class Import
         // CSVファイルを処理する
         $fp = fopen($csvFilename, 'r');
         while ($row = fgetcsv($fp)) {
-            $closure(ZipCodeRecord::makeOffice($row));
+            $closure(YubinRecord::makeOffice($row));
         }
         fclose($fp);
 
@@ -139,18 +139,18 @@ class Import
      * @return array
      * @throws Exception
      */
-    public static function import(): array
+    public static function download(): array
     {
         $zipCodes = collect();
-        Import::importTown(function (ZipCodeRecord $record) use ($zipCodes) {
+        YubinDownloader::downloadKen(function (YubinRecord $record) use ($zipCodes) {
             $zipCodes->push($record);
         });
-        Import::importOffice(function (ZipCodeRecord $record) use ($zipCodes) {
+        YubinDownloader::downloadJigyosyo(function (YubinRecord $record) use ($zipCodes) {
             $zipCodes->push($record);
         });
         $inserts = [];
         $zipCodes->groupBy('zipCode')->each(function ($records) use (&$inserts) {
-            $inserts[] = ZipCodeRecord::unify($records->toArray())->toArray();
+            $inserts[] = YubinRecord::unify($records->toArray())->toArray();
         });
         return $inserts;
     }

@@ -1,8 +1,8 @@
 <?php
 
-namespace Kobesoft\YubinData\Services\JpZipCode;
+namespace Kobesoft\YubinData\Services\Yubin;
 
-class ZipCodeRecord
+class YubinRecord
 {
     /**
      * コンストラクタ
@@ -21,11 +21,11 @@ class ZipCodeRecord
     /**
      * 全国の郵便番号データからレコードを作成する
      * @param array $row CSVの行
-     * @return ZipCodeRecord 郵便番号レコード
+     * @return YubinRecord 郵便番号レコード
      */
-    public static function makeTown(array $row): ZipCodeRecord
+    public static function makeTown(array $row): YubinRecord
     {
-        return new ZipCodeRecord(
+        return new YubinRecord(
             zipCode: $row[2],
             prefecture: $row[6],
             city: $row[7],
@@ -36,11 +36,11 @@ class ZipCodeRecord
     /**
      * 事業所の郵便番号データからレコードを作成する
      * @param array $row CSVの行
-     * @return ZipCodeRecord 郵便番号レコード
+     * @return YubinRecord 郵便番号レコード
      */
-    public static function makeOffice(array $row): ZipCodeRecord
+    public static function makeOffice(array $row): YubinRecord
     {
-        return new ZipCodeRecord(
+        return new YubinRecord(
             zipCode: $row[7],
             prefecture: $row[3],
             city: $row[4],
@@ -103,9 +103,9 @@ class ZipCodeRecord
      * 共通化した郵便番号レコードを返す
      *
      * @param array $records
-     * @return ZipCodeRecord
+     * @return YubinRecord
      */
-    public static function unify(array $records): ZipCodeRecord
+    public static function unify(array $records): YubinRecord
     {
         $unified = array_pop($records);
         foreach ($records as $record) {
