@@ -5,7 +5,7 @@ namespace Kobesoft\YubinData\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Kobesoft\YubinData\Models\JpZipCode;
-use Kobesoft\YubinData\Services\Yubin\YubinDownloader;
+use Kobesoft\YubinData\Services\Yubin\YubinImporter;
 use Kobesoft\YubinData\Services\Yubin\YubinRecord;
 
 class ImportYubinData extends Command
@@ -34,7 +34,7 @@ class ImportYubinData extends Command
 
         // 郵便番号データをダウンロードする
         $this->info('郵便番号データをダウンロードしています。');
-        $inserts = YubinDownloader::download();
+        $inserts = YubinImporter::import();
 
         // 郵便番号データを削除する
         JpZipCode::truncate();

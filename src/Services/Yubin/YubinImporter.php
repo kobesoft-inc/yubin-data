@@ -6,11 +6,18 @@ use Closure;
 use Exception;
 use ZipArchive;
 
-class YubinDownloader
+class YubinImporter
 {
+    // 郵便番号データのURL
     const KEN_URL = 'https://www.post.japanpost.jp/zipcode/dl/utf/zip/utf_ken_all.zip';
+
+    // 郵便番号データのファイル名
     const KEN_FILE = 'utf_all.csv';
+
+    // 事業所の郵便番号データのURL
     const JIGYOSYO_URL = 'https://www.post.japanpost.jp/zipcode/dl/jigyosyo/zip/jigyosyo.zip';
+
+    // 事業所の郵便番号データのファイル名
     const JIGYOSYO_FILE = 'JIGYOSYO.CSV';
 
     /**
@@ -87,7 +94,7 @@ class YubinDownloader
      * @return void
      * @throws Exception
      */
-    protected static function downloadKen(Closure $closure)
+    protected static function importKen(Closure $closure)
     {
         // ファイルをダウンロードして解凍する
         $zipFilename = self::downloadFromUrl(self::KEN_URL);
@@ -112,7 +119,7 @@ class YubinDownloader
      * @return void
      * @throws Exception
      */
-    protected static function downloadJigyosyo(Closure $closure)
+    protected static function importJigyosyo(Closure $closure)
     {
         // ファイルをダウンロードして解凍する
         $zipFilename = self::downloadFromUrl(self::JIGYOSYO_URL);
@@ -139,13 +146,13 @@ class YubinDownloader
      * @return array
      * @throws Exception
      */
-    public static function download(): array
+    public static function import(): array
     {
         $zipCodes = collect();
-        YubinDownloader::downloadKen(function (YubinRecord $record) use ($zipCodes) {
+        YubinImporter::importKen(function (YubinRecord $record) use ($zipCodes) {
             $zipCodes->push($record);
         });
-        YubinDownloader::downloadJigyosyo(function (YubinRecord $record) use ($zipCodes) {
+        YubinImporter::importJigyosyo(function (YubinRecord $record) use ($zipCodes) {
             $zipCodes->push($record);
         });
         return $zipCodes
