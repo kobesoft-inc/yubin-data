@@ -52,7 +52,5 @@ class ImportYubinData extends Command
 
         // 完了のメッセージを表示する
         $this->info('日本の郵便番号データベースのインポートが完了しました。');
-
-        dd(YubinRecord::$unifiedData);
     }
 }

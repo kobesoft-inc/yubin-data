@@ -114,11 +114,6 @@ class YubinRecord
             $unified->officeAddress = $unified->officeAddress === $record->officeAddress ? $unified->officeAddress : null;
             $unified->officeName = $unified->officeName === $record->officeName ? $unified->officeName : null;
         }
-        if (count($records) > 0) {
-            self::$unifiedData[] = $unified;
-        }
         return $unified;
     }
-
-    public static $unifiedData = [];
 }
